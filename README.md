@@ -47,7 +47,7 @@ Output **seve**' version number.
 
 ## Usage as grunt plugin
 
-There's many great grunt plugins to do what seve does, like [grunt-connect](https://www.npmjs.org/package/grunt-connect).
+There's many great grunt plugins to do what seve does, like [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect).
     
 ## Contributing
 
@@ -56,6 +56,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 ## Release History
 
 * **0.1.0**: Initial release (*11/09/14*)
+
+### TODO
+
+* [ ] Add livereload capabilities?
 
 ## License
 Copyright (c) 2014 Leny  
