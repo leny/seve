@@ -12,7 +12,9 @@
 
 pkg = require "../package.json"
 
-zouti = require "zouti"
+server = ( express = require "express" )()
+chalk = require "chalk"
+error = chalk.bold.red
 
 ( program = require "commander" )
     .version pkg.version
@@ -22,4 +24,18 @@ zouti = require "zouti"
     .option "-q, --quiet", "show raw result, as number of minutes spent on the project."
     .parse process.argv
 
-console.log program
+if isNaN ( iPort = +( program.port or 12345 ) )
+    console.log error "✘ port must be a number, '#{ iPort }' given."
+    process.exit 1
+
+unless program.quiet
+    server.use ( oRequest, oResponse, fNext ) ->
+        console.log chalk.cyan( "(#{ oRequest.method })" ), oRequest.url
+        fNext()
+
+server.use express.static process.cwd()
+
+server.listen iPort
+
+console.log chalk.underline "Server listening on port #{ chalk.bold.yellow( iPort ) }."
+console.log "Quit with (#{ chalk.cyan( '^+C' ) })."
