@@ -1,4 +1,4 @@
-# seve
+# sèvè
 
 [![NPM version](http://img.shields.io/npm/v/seve.svg)](https://www.npmjs.org/package/seve) ![Dependency Status](https://david-dm.org/leny/seve.svg) ![Downloads counter](http://img.shields.io/npm/dm/seve.svg)
 
@@ -10,13 +10,13 @@
 
 ### Installation
 
-To use **seve**, you must at first install it globally.
+To use **sèvè**, you must at first install it globally.
 
     (sudo) npm install -g seve
 
 ### Usage
 
-Using **seve** is simple, from inside any folder: 
+Using **sèvè** is simple, from inside any folder: 
 
     seve [options]
     
@@ -35,7 +35,7 @@ Manually setup the port for the server. Defaults to `12345`.
 
 ##### quiet (`-q`,`--quiet`)
 
-By default, **seve** output all the logs. You can tell him to shut the hell up with this option.
+By default, **sèvè** output all the logs. You can tell him to shut the hell up with this option.
 
 ##### help (`-h`,`--help`)
 
@@ -43,7 +43,7 @@ Output usage information.
 
 ##### version (`-v`,`--version`)
 
-Output **seve**' version number.
+Output **sèvè**' version number.
 
 ## Usage as grunt plugin
 
