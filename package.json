@@ -1,7 +1,7 @@
 {
   "name": "seve",
-  "version": "0.1.1",
-  "description": "Run a tiny & simple server from the current folder in your terminal (like, for tests & stuffs).",
+  "version": "0.2.0",
+  "description": "Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current).",
   "keywords": [
     "commandline",
     "cli",

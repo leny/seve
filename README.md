@@ -2,7 +2,7 @@
 
 [![NPM version](http://img.shields.io/npm/v/seve.svg)](https://www.npmjs.org/package/seve) ![Dependency Status](https://david-dm.org/leny/seve.svg) ![Downloads counter](http://img.shields.io/npm/dm/seve.svg)
 
-> Run a tiny & simple server from the current folder in your terminal (like, for tests & stuffs).
+> Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current).
 
 * * *
 
@@ -16,17 +16,26 @@ To use **sèvè**, you must at first install it globally.
 
 ### Usage
 
-Using **sèvè** is simple, from inside any folder: 
+Using **sèvè** is simple:
 
-    seve [options]
-    
+    seve [options] [folder]
+
+    Arguments:
+        [folder]               folder to serve
+
     Options:
 
         -h, --help             output usage information
         -V, --version          output the version number
         -p, --port <port>      port used by the server (default to 12345)
         -q, --quiet            don't show the logs
-    
+
+#### Arguments
+
+##### folder
+
+The folder to serve. If no folder is given (or if the given path isn't a folder), the current folder will be used.
+
 #### Options
 
 ##### port (`-p`,`--port <port>`)
@@ -48,13 +57,14 @@ Output **sèvè**' version number.
 ## Usage as grunt plugin
 
 There's many great grunt plugins to do what seve does, like [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect).
-    
+
 ## Contributing
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Lint your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
 
+* **0.2.0**: Accet a folder argument to choose the folder to serve (*28/08/15*)
 * **0.1.1**: Add time to logs (*23/09/14*)
 * **0.1.0**: Initial release (*11/09/14*)
 
