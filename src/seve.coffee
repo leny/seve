@@ -14,13 +14,21 @@ pkg = require "../package.json"
 
 server = ( express = require "express" )()
 chalk = require "chalk"
+fs = require "fs"
+
+sServerRoot = process.cwd()
 
 ( program = require "commander" )
     .version pkg.version
-    .usage "[options]"
-    .description "Run a tiny & simple server from the current folder (like, for tests & stuffs)."
+    .arguments "[folder]"
+    .usage "[options] [folder]"
+    .description "Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current)."
     .option "-p, --port <port>", "port used by the server (default to 12345)"
     .option "-q, --quiet", "don't show the logs"
+    .action ( folder ) ->
+        return console.log chalk.bold.red "✘ given folder doesn't exists, use current path instead." unless fs.existsSync folder
+        return console.log chalk.bold.red "✘ given folder isn't a folder, use current path instead." unless ( fs.statSync folder ).isDirectory()
+        sServerRoot = folder
     .parse process.argv
 
 if isNaN ( iPort = +( program.port or 12345 ) )
@@ -33,9 +41,8 @@ unless program.quiet
         console.log chalk.cyan( "[#{ sHour }]"), chalk.magenta( "(#{ oRequest.method })" ), oRequest.url
         fNext()
 
-server.use express.static process.cwd()
-
+server.use express.static sServerRoot
 server.listen iPort
 
-console.log chalk.underline "Server listening on port #{ chalk.bold.yellow( iPort ) }."
+console.log chalk.underline "Serving folder #{ chalk.bold.cyan sServerRoot } listening on port #{ chalk.bold.yellow iPort }."
 console.log "Quit with (#{ chalk.cyan( '^+C' ) }).\n"
