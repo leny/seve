@@ -35,6 +35,10 @@ if isNaN ( iPort = +( program.port or 12345 ) )
     console.log chalk.bold.red "✘ port must be a number, '#{ iPort }' given."
     process.exit 1
 
+if iPort <= 1024 && process.getuid() isnt 0
+    console.log chalk.bold.yellow "⚠ seve needs to be run as sudo to use port '#{ iPort }'."
+    process.exit 1
+
 unless program.quiet
     server.use ( oRequest, oResponse, fNext ) ->
         sHour = ( new Date() ).toTimeString().split( " " )[ 0 ]
