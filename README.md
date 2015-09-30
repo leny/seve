@@ -54,6 +54,10 @@ Output usage information.
 
 Output **sèvè**' version number.
 
+## Note for ports 1 to 1024
+
+If you want to use a port number between 1 and 1024, **seve** must be run with sudo rights.
+
 ## Usage as grunt plugin
 
 There's many great grunt plugins to do what seve does, like [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect).
@@ -64,7 +68,8 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-* **0.2.0**: Accet a folder argument to choose the folder to serve (*28/08/15*)
+* **0.3.0**: Warn & exit if seve needs sudo rights (*30/09/15*)
+* **0.2.0**: Accept a folder argument to choose the folder to serve (*28/08/15*)
 * **0.1.1**: Add time to logs (*23/09/14*)
 * **0.1.0**: Initial release (*11/09/14*)
 
