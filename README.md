@@ -68,6 +68,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* **0.4.0**: Rewrite package using ES2015 (*15/01/16*)
 * **0.3.0**: Warn & exit if seve needs sudo rights (*30/09/15*)
 * **0.2.0**: Accept a folder argument to choose the folder to serve (*28/08/15*)
 * **0.1.1**: Add time to logs (*23/09/14*)
