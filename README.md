@@ -29,6 +29,7 @@ Using **sèvè** is simple:
         -V, --version          output the version number
         -p, --port <port>      port used by the server (default to 12345)
         -q, --quiet            don't show the logs
+        -N, --no-open          don't browse to the URL at startup
 
 #### Arguments
 
@@ -45,6 +46,10 @@ Manually setup the port for the server. Defaults to `12345`.
 ##### quiet (`-q`,`--quiet`)
 
 By default, **sèvè** output all the logs. You can tell him to shut the hell up with this option.
+
+##### no open (`-N`,`--no-open`)
+
+By default (since version `0.5.0`), **sèvè** will browse to the URL of the server at startup. You can disable this behavior with this option.
 
 ##### help (`-h`,`--help`)
 
@@ -68,16 +73,13 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* **0.5.0**: Add browse to URL behavior & `--no-open` option (*21/02/16*)
 * **0.4.1**: Fix transpilation bug (*12/02/16*)
 * **0.4.0**: Rewrite package using ES2015 (*15/01/16*)
 * **0.3.0**: Warn & exit if seve needs sudo rights (*30/09/15*)
 * **0.2.0**: Accept a folder argument to choose the folder to serve (*28/08/15*)
 * **0.1.1**: Add time to logs (*23/09/14*)
 * **0.1.0**: Initial release (*11/09/14*)
-
-### TODO
-
-* [ ] Add livereload capabilities?
 
 ## License
 Copyright (c) 2014 Leny  
