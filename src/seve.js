@@ -13,6 +13,7 @@ import express from "express";
 import chalk from "chalk";
 import fs from "fs";
 import program from "commander";
+import { open } from "openurl";
 
 let pkg = require( "../package.json" ),
     server = express(),
@@ -26,6 +27,7 @@ program
     .description( "Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current)." )
     .option( "-p, --port <port>", "port used by the server (default to 12345)" )
     .option( "-q, --quiet", "don't show the logs" )
+    .option( "-N, --no-open", "don't browse to the URL at startup" )
     .action( ( sFolder ) => {
         if ( !fs.existsSync( sFolder ) ) {
             return console.log( chalk.bold.red( "✘ given folder doesn't exists, use current path instead." ) );
@@ -58,6 +60,9 @@ if ( !program.quiet ) {
 
 server.use( express.static( sServerRoot ) );
 server.listen( iPort );
+if ( program.open ) {
+    open( `http://localhost:${ iPort }` );
+}
 
 console.log( chalk.underline( `Serving folder ${ chalk.bold.cyan( sServerRoot ) } listening on port ${ chalk.bold.yellow( iPort ) }.` ) );
 console.log( `Quit with (${ chalk.cyan( "^+C" ) }).\n` );
