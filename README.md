@@ -81,6 +81,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 * **0.1.1**: Add time to logs (*23/09/14*)
 * **0.1.0**: Initial release (*11/09/14*)
 
+### TODO
+
+* [ ] Add auto-index option like [Tèsèvè](https://teseve.github.io).
+
 ## License
 Copyright (c) 2014 Leny  
 Licensed under the MIT license.
