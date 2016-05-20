@@ -10,9 +10,15 @@
 /* eslint-disable no-console */
 
 import express from "express";
+import expressHBS from "express-handlebars";
 import chalk from "chalk";
 import fs from "fs";
+import path from "path";
+import os from "os";
 import program from "commander";
+import mimetype from "mimetype";
+import humanSize from "human-size";
+import moment from "moment";
 import { open } from "openurl";
 
 let pkg = require( "../package.json" ),
@@ -27,6 +33,7 @@ program
     .description( "Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current)." )
     .option( "-p, --port <port>", "port used by the server (default to 12345)" )
     .option( "-q, --quiet", "don't show the logs" )
+    .option( "-i, --index", "enable autoindex" )
     .option( "-N, --no-open", "don't browse to the URL at startup" )
     .action( ( sFolder ) => {
         if ( !fs.existsSync( sFolder ) ) {
@@ -49,6 +56,56 @@ if ( iPort <= 1024 && process.getuid() !== 0 ) {
     process.exit( 1 );
 }
 
+if ( program.index ) {
+    server
+        .engine( "hbs", expressHBS( { "extname": "hbs" } ) )
+        .set( "view engine", "hbs" )
+        .set( "views", `${ __dirname }/../views` )
+        .use( "/__seve", express.static( `${ __dirname }/../autoindexes` ) )
+        .use( ( oRequest, oResponse, fNext ) => {
+            if ( oRequest.url.substr( -1 ) === "/" ) {
+                let sPath = path.join( sServerRoot, oRequest.url );
+
+                if ( fs.existsSync( `${ sPath }/index.html` ) ) {
+                    return oResponse.sendFile( `${ sPath }/index.html` );
+                }
+                if ( fs.existsSync( `${ sPath }/index.htm` ) ) {
+                    return oResponse.sendFile( `${ sPath }/index.htm` );
+                }
+
+                return oResponse.render( "autoindex.hbs", {
+                    "files": fs.readdirSync( sPath ).map( ( sFile ) => {
+                        if ( sFile.substr( 0, 1 ) !== "." ) {
+                            let oFile = fs.statSync( `${ sPath }/${ sFile }` ),
+                                sMimeType = mimetype.lookup( sFile );
+
+                            sMimeType = sMimeType ? sMimeType.split( "/" )[ 0 ] : "unknown";
+
+                            return {
+                                "isFolder": oFile.isDirectory(),
+                                "mime": oFile.isDirectory() ? "folder" : sMimeType,
+                                "name": sFile,
+                                "size": humanSize( oFile.size ),
+                                "time": {
+                                    "raw": oFile.mtime,
+                                    "human": moment( oFile.mtime ).format( "YYYY-MM-DD HH:mm:SS" )
+                                }
+                            };
+                        }
+
+                        return false;
+                    } ).sort(),
+                    "folder": oRequest.url,
+                    "hasParent": oRequest.url !== "/",
+                    "port": iPort,
+                    "root": sServerRoot.replace( os.homedir(), "~" ),
+                    "version": pkg.version
+                } );
+            }
+            fNext();
+        } );
+}
+
 if ( !program.quiet ) {
     server.use( ( oRequest, oResponse, fNext ) => {
         let sHour = ( new Date() ).toTimeString().split( " " )[ 0 ];
@@ -60,6 +117,7 @@ if ( !program.quiet ) {
 
 server.use( express.static( sServerRoot ) );
 server.listen( iPort );
+
 if ( program.open ) {
     open( `http://localhost:${ iPort }` );
 }
