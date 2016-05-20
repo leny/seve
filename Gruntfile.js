@@ -39,7 +39,7 @@ module.exports = function( grunt ) {
         },
         "watch": {
             "src": {
-                "files": "src/**/¨.js",
+                "files": "src/**/*.js",
                 "tasks": [ "default" ]
             }
         }
