@@ -29,6 +29,7 @@ Using **sèvè** is simple:
         -V, --version          output the version number
         -p, --port <port>      port used by the server (default to 12345)
         -q, --quiet            don't show the logs
+        -i, --index            enable autoindex
         -N, --no-open          don't browse to the URL at startup
 
 #### Arguments
@@ -42,6 +43,10 @@ The folder to serve. If no folder is given (or if the given path isn't a folder)
 ##### port (`-p`,`--port <port>`)
 
 Manually setup the port for the server. Defaults to `12345`.
+
+##### autoindex (`-i`,`--index`)
+
+When no index file (`index.html` or `index.html`) are found inside a folder, **sèvè** returns an `HTTP 404 Error`. Since version `0.6.0`, by activating this option, you can show an **autoindex**: a list of files & folders in the current path.
 
 ##### quiet (`-q`,`--quiet`)
 
@@ -73,6 +78,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* **0.6.0**: Add `--index` option (*21/05/16*)
 * **0.5.0**: Add browse to URL behavior & `--no-open` option (*21/02/16*)
 * **0.4.1**: Fix transpilation bug (*12/02/16*)
 * **0.4.0**: Rewrite package using ES2015 (*15/01/16*)
@@ -83,7 +89,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ### TODO
 
-* [ ] Add auto-index option like [Tèsèvè](https://teseve.github.io).
+* [x] Add auto-index option like [Tèsèvè](https://teseve.github.io).
 
 ## License
 Copyright (c) 2014 Leny  
