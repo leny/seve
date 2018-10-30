@@ -1,6 +1,6 @@
 # sèvè
 
-[![NPM version](http://img.shields.io/npm/v/seve.svg)](https://www.npmjs.org/package/seve) ![Dependency Status](https://david-dm.org/leny/seve.svg) ![Downloads counter](http://img.shields.io/npm/dm/seve.svg)
+[![NPM version](http://img.shields.io/npm/v/seve.svg)](https://www.npmjs.org/package/seve) ![Downloads counter](http://img.shields.io/npm/dm/seve.svg)
 
 > Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current).
 
