@@ -1,10 +1,10 @@
-/* seve
- * https://github.com/leny/seve
+#!/usr/bin/env node
+/* leny/seve
  *
- * JS Document - /seve.js - main entry point, commander setup and runner
+ * /src/seve.js - Main Entry point
  *
- * Copyright (c) 2014 Leny
- * Licensed under the MIT license.
+ * coded by leny@flatLand!
+ * refactored at 30/10/2018
  */
 
 /* eslint-disable no-console */
@@ -19,108 +19,141 @@ import program from "commander";
 import mimetype from "mimetype";
 import humanSize from "human-size";
 import moment from "moment";
-import { open } from "openurl";
+import {open} from "openurl";
 
-let pkg = require( "../package.json" ),
+let pkg = require("../package.json"),
     server = express(),
     sServerRoot = process.cwd(),
     iPort;
 
 program
-    .version( pkg.version )
-    .arguments( "[folder]" )
-    .usage( "[options] [folder]" )
-    .description( "Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current)." )
-    .option( "-p, --port <port>", "port used by the server (default to 12345)" )
-    .option( "-q, --quiet", "don't show the logs" )
-    .option( "-i, --index", "enable autoindex" )
-    .option( "-N, --no-open", "don't browse to the URL at startup" )
-    .action( ( sFolder ) => {
-        if ( !fs.existsSync( sFolder ) ) {
-            return console.log( chalk.bold.red( "✘ given folder doesn't exists, use current path instead." ) );
+    .version(pkg.version)
+    .arguments("[folder]")
+    .usage("[options] [folder]")
+    .description(
+        "Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current).",
+    )
+    .option("-p, --port <port>", "port used by the server (default to 12345)")
+    .option("-q, --quiet", "don't show the logs")
+    .option("-i, --index", "enable autoindex")
+    .option("-N, --no-open", "don't browse to the URL at startup")
+    .action(sFolder => {
+        if (!fs.existsSync(sFolder)) {
+            return console.log(
+                chalk.bold.red(
+                    "✘ given folder doesn't exists, use current path instead.",
+                ),
+            );
         }
-        if ( !fs.statSync( sFolder ).isDirectory() ) {
-            return console.log( chalk.bold.red( "✘ given folder isn't a folder, use current path instead." ) );
+        if (!fs.statSync(sFolder).isDirectory()) {
+            return console.log(
+                chalk.bold.red(
+                    "✘ given folder isn't a folder, use current path instead.",
+                ),
+            );
         }
         sServerRoot = sFolder;
-    } )
-    .parse( process.argv );
+    })
+    .parse(process.argv);
 
-if ( isNaN( iPort = +( program.port || 12345 ) ) ) {
-    console.log( chalk.bold.red( `✘ port must be a number, '${ iPort }' given.` ) );
-    process.exit( 1 );
+if (isNaN((iPort = +(program.port || 12345)))) {
+    console.log(chalk.bold.red(`✘ port must be a number, '${iPort}' given.`));
+    process.exit(1);
 }
 
-if ( iPort <= 1024 && process.getuid() !== 0 ) {
-    console.log( chalk.bold.yellow( `⚠ seve needs to be run as sudo to use port '${ iPort }'.` ) );
-    process.exit( 1 );
+if (iPort <= 1024 && process.getuid() !== 0) {
+    console.log(
+        chalk.bold.yellow(
+            `⚠ seve needs to be run as sudo to use port '${iPort}'.`,
+        ),
+    );
+    process.exit(1);
 }
 
-if ( program.index ) {
+if (program.index) {
     server
-        .engine( "hbs", expressHBS( { "extname": "hbs" } ) )
-        .set( "view engine", "hbs" )
-        .set( "views", `${ __dirname }/../views` )
-        .use( "/__seve", express.static( `${ __dirname }/../autoindexes` ) )
-        .use( ( oRequest, oResponse, fNext ) => {
-            if ( oRequest.url.substr( -1 ) === "/" ) {
-                let sPath = path.join( sServerRoot, oRequest.url );
+        .engine("hbs", expressHBS({extname: "hbs"}))
+        .set("view engine", "hbs")
+        .set("views", `${__dirname}/../views`)
+        .use("/__seve", express.static(`${__dirname}/../autoindexes`))
+        .use((oRequest, oResponse, fNext) => {
+            if (oRequest.url.substr(-1) === "/") {
+                let sPath = path.join(sServerRoot, oRequest.url);
 
-                if ( fs.existsSync( `${ sPath }/index.html` ) ) {
-                    return oResponse.sendFile( `${ sPath }/index.html` );
+                if (fs.existsSync(`${sPath}/index.html`)) {
+                    return oResponse.sendFile(`${sPath}/index.html`);
                 }
-                if ( fs.existsSync( `${ sPath }/index.htm` ) ) {
-                    return oResponse.sendFile( `${ sPath }/index.htm` );
+                if (fs.existsSync(`${sPath}/index.htm`)) {
+                    return oResponse.sendFile(`${sPath}/index.htm`);
                 }
 
-                return oResponse.render( "autoindex.hbs", {
-                    "files": fs.readdirSync( sPath ).map( ( sFile ) => {
-                        if ( sFile.substr( 0, 1 ) !== "." ) {
-                            let oFile = fs.statSync( `${ sPath }/${ sFile }` ),
-                                sMimeType = mimetype.lookup( sFile );
+                return oResponse.render("autoindex.hbs", {
+                    files: fs
+                        .readdirSync(sPath)
+                        .map(sFile => {
+                            if (sFile.substr(0, 1) !== ".") {
+                                let oFile = fs.statSync(`${sPath}/${sFile}`),
+                                    sMimeType = mimetype.lookup(sFile);
 
-                            sMimeType = sMimeType ? sMimeType.split( "/" )[ 0 ] : "unknown";
+                                sMimeType = sMimeType
+                                    ? sMimeType.split("/")[0]
+                                    : "unknown";
 
-                            return {
-                                "isFolder": oFile.isDirectory(),
-                                "mime": oFile.isDirectory() ? "folder" : sMimeType,
-                                "name": sFile,
-                                "size": humanSize( oFile.size ),
-                                "time": {
-                                    "raw": oFile.mtime,
-                                    "human": moment( oFile.mtime ).format( "YYYY-MM-DD HH:mm:SS" )
-                                }
-                            };
-                        }
+                                return {
+                                    isFolder: oFile.isDirectory(),
+                                    mime: oFile.isDirectory()
+                                        ? "folder"
+                                        : sMimeType,
+                                    name: sFile,
+                                    size: humanSize(oFile.size),
+                                    time: {
+                                        raw: oFile.mtime,
+                                        human: moment(oFile.mtime).format(
+                                            "YYYY-MM-DD HH:mm:SS",
+                                        ),
+                                    },
+                                };
+                            }
 
-                        return false;
-                    } ).sort(),
-                    "folder": oRequest.url,
-                    "hasParent": oRequest.url !== "/",
-                    "port": iPort,
-                    "root": sServerRoot.replace( os.homedir(), "~" ),
-                    "version": pkg.version
-                } );
+                            return false;
+                        })
+                        .sort(),
+                    folder: oRequest.url,
+                    hasParent: oRequest.url !== "/",
+                    port: iPort,
+                    root: sServerRoot.replace(os.homedir(), "~"),
+                    version: pkg.version,
+                });
             }
             fNext();
-        } );
+        });
 }
 
-if ( !program.quiet ) {
-    server.use( ( oRequest, oResponse, fNext ) => {
-        let sHour = ( new Date() ).toTimeString().split( " " )[ 0 ];
+if (!program.quiet) {
+    server.use((oRequest, oResponse, fNext) => {
+        let sHour = new Date().toTimeString().split(" ")[0];
 
-        console.log( chalk.cyan( `[${ sHour }]` ), chalk.magenta( `(${ oRequest.method })` ), oRequest.url );
+        console.log(
+            chalk.cyan(`[${sHour}]`),
+            chalk.magenta(`(${oRequest.method})`),
+            oRequest.url,
+        );
         fNext();
-    } );
+    });
 }
 
-server.use( express.static( sServerRoot ) );
-server.listen( iPort );
+server.use(express.static(sServerRoot));
+server.listen(iPort);
 
-if ( program.open ) {
-    open( `http://localhost:${ iPort }` );
+if (program.open) {
+    open(`http://localhost:${iPort}`);
 }
 
-console.log( chalk.underline( `Serving folder ${ chalk.bold.cyan( sServerRoot ) } listening on port ${ chalk.bold.yellow( iPort ) }.` ) );
-console.log( `Quit with (${ chalk.cyan( "^+C" ) }).\n` );
+console.log(
+    chalk.underline(
+        `Serving folder ${chalk.bold.cyan(
+            sServerRoot,
+        )} listening on port ${chalk.bold.yellow(iPort)}.`,
+    ),
+);
+console.log(`Quit with (${chalk.cyan("^+C")}).\n`);
