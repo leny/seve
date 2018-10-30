@@ -78,6 +78,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* **0.7.0**: Update dependencies, update tooling (*30/10/18*)
 * **0.6.0**: Add `--index` option (*21/05/16*)
 * **0.5.0**: Add browse to URL behavior & `--no-open` option (*21/02/16*)
 * **0.4.1**: Fix transpilation bug (*12/02/16*)
