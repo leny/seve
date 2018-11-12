@@ -19,7 +19,7 @@ import program from "commander";
 import mimetype from "mimetype";
 import humanSize from "human-size";
 import moment from "moment";
-import {open} from "openurl";
+import opn from "opn";
 
 let pkg = require("../package.json"),
     server = express(),
@@ -150,7 +150,7 @@ server.use(express.static(sServerRoot));
 server.listen(iPort);
 
 if (program.open) {
-    open(`http://localhost:${iPort}`);
+    opn(`http://localhost:${iPort}`);
 }
 
 console.log(
