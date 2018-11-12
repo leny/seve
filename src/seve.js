@@ -81,10 +81,14 @@ if (program.index) {
                 let sPath = path.join(sServerRoot, oRequest.url);
 
                 if (fs.existsSync(`${sPath}/index.html`)) {
-                    return oResponse.sendFile(`${sPath}/index.html`);
+                    return oResponse.sendFile("./index.html", {
+                        root: path.resolve(process.cwd(), sPath),
+                    });
                 }
                 if (fs.existsSync(`${sPath}/index.htm`)) {
-                    return oResponse.sendFile(`${sPath}/index.htm`);
+                    return oResponse.sendFile("index.htm", {
+                        root: path.resolve(process.cwd(), sPath),
+                    });
                 }
 
                 return oResponse.render("autoindex.hbs", {
