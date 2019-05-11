@@ -45,6 +45,9 @@
       "pre-commit": "npx lint-staged"
     }
   },
+  "files": [
+    "lib","autoindexes","views"
+  ],
   "bin": {
     "seve": "lib/seve.js"
   },
