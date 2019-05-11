@@ -36,6 +36,10 @@ program
     .option("-p, --port <port>", "port used by the server (default to 12345)")
     .option("-q, --quiet", "don't show the logs")
     .option("-i, --index", "enable autoindex")
+    .option(
+        "-e, --exclude <glob>",
+        "don't show matching files (only with autoindex)",
+    )
     .option("-N, --no-open", "don't browse to the URL at startup")
     .action(sFolder => {
         if (!fs.existsSync(sFolder)) {
