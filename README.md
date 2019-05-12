@@ -30,6 +30,7 @@ Using **sèvè** is simple:
         -p, --port <port>      port used by the server (default to 12345)
         -q, --quiet            don't show the logs
         -i, --index            enable autoindex
+        -e, --exclude <glob>   don't show matching files (only with autoindex)
         -N, --no-open          don't browse to the URL at startup
 
 #### Arguments
@@ -47,6 +48,10 @@ Manually setup the port for the server. Defaults to `12345`.
 ##### autoindex (`-i`,`--index`)
 
 When no index file (`index.html` or `index.html`) are found inside a folder, **sèvè** returns an `HTTP 404 Error`. Since version `0.6.0`, by activating this option, you can show an **autoindex**: a list of files & folders in the current path.
+
+##### exclude (`-e`,`--exclude <glob>`)
+
+Within autoindexes, don't show the files matching the given glob string.
 
 ##### quiet (`-q`,`--quiet`)
 
@@ -78,6 +83,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+* **0.8.0**: Add `--exclude` option (*12/05/2019*)
 * **0.7.0**: Update dependencies, update tooling (*30/10/18*)
 * **0.6.0**: Add `--index` option (*21/05/16*)
 * **0.5.0**: Add browse to URL behavior & `--no-open` option (*21/02/16*)
@@ -88,10 +94,6 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 * **0.1.1**: Add time to logs (*23/09/14*)
 * **0.1.0**: Initial release (*11/09/14*)
 
-### TODO
-
-* [x] Add auto-index option like [Tèsèvè](https://teseve.github.io).
-
 ## License
-Copyright (c) 2014 Leny  
+Copyright (c) 2014 Leny
 Licensed under the MIT license.
