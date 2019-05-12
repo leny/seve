@@ -16,15 +16,16 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import program from "commander";
-import mimetype from "mimetype";
+import MimeType from "mimetype";
 import humanSize from "human-size";
 import moment from "moment";
-import opn from "opn";
+import open from "open";
+import micromatch from "micromatch";
 
 let pkg = require("../package.json"),
     server = express(),
-    sServerRoot = process.cwd(),
-    iPort;
+    serverRoot = process.cwd(),
+    port;
 
 program
     .version(pkg.version)
@@ -41,34 +42,34 @@ program
         "don't show matching files (only with autoindex)",
     )
     .option("-N, --no-open", "don't browse to the URL at startup")
-    .action(sFolder => {
-        if (!fs.existsSync(sFolder)) {
+    .action(folder => {
+        if (!fs.existsSync(folder)) {
             return console.log(
                 chalk.bold.red(
                     "✘ given folder doesn't exists, use current path instead.",
                 ),
             );
         }
-        if (!fs.statSync(sFolder).isDirectory()) {
+        if (!fs.statSync(folder).isDirectory()) {
             return console.log(
                 chalk.bold.red(
                     "✘ given folder isn't a folder, use current path instead.",
                 ),
             );
         }
-        sServerRoot = sFolder;
+        serverRoot = folder;
     })
     .parse(process.argv);
 
-if (isNaN((iPort = +(program.port || 12345)))) {
-    console.log(chalk.bold.red(`✘ port must be a number, '${iPort}' given.`));
+if (isNaN((port = +(program.port || 12345)))) {
+    console.log(chalk.bold.red(`✘ port must be a number, '${port}' given.`));
     process.exit(1);
 }
 
-if (iPort <= 1024 && process.getuid() !== 0) {
+if (port <= 1024 && process.getuid() !== 0) {
     console.log(
         chalk.bold.yellow(
-            `⚠ seve needs to be run as sudo to use port '${iPort}'.`,
+            `⚠ seve needs to be run as sudo to use port '${port}'.`,
         ),
     );
     process.exit(1);
@@ -80,43 +81,53 @@ if (program.index) {
         .set("view engine", "hbs")
         .set("views", `${__dirname}/../views`)
         .use("/__seve", express.static(`${__dirname}/../autoindexes`))
-        .use((oRequest, oResponse, fNext) => {
-            if (oRequest.url.substr(-1) === "/") {
-                let sPath = path.join(sServerRoot, oRequest.url);
+        .use((request, response, next) => {
+            if (request.url.substr(-1) === "/") {
+                let folder = path.join(serverRoot, request.url);
 
-                if (fs.existsSync(`${sPath}/index.html`)) {
-                    return oResponse.sendFile("./index.html", {
-                        root: path.resolve(process.cwd(), sPath),
+                if (fs.existsSync(`${folder}/index.html`)) {
+                    return response.sendFile("./index.html", {
+                        root: path.resolve(process.cwd(), folder),
                     });
                 }
-                if (fs.existsSync(`${sPath}/index.htm`)) {
-                    return oResponse.sendFile("index.htm", {
-                        root: path.resolve(process.cwd(), sPath),
+                if (fs.existsSync(`${folder}/index.htm`)) {
+                    return response.sendFile("index.htm", {
+                        root: path.resolve(process.cwd(), folder),
                     });
                 }
 
-                return oResponse.render("autoindex.hbs", {
+                return response.render("autoindex.hbs", {
                     files: fs
-                        .readdirSync(sPath)
-                        .map(sFile => {
-                            if (sFile.substr(0, 1) !== ".") {
-                                let oFile = fs.statSync(`${sPath}/${sFile}`),
-                                    sMimeType = mimetype.lookup(sFile);
+                        .readdirSync(folder)
+                        .filter(
+                            filename =>
+                                !(
+                                    program.exclude &&
+                                    micromatch.isMatch(
+                                        filename,
+                                        program.exclude.split(","),
+                                    )
+                                ),
+                        )
+                        .map(filename => {
+                            if (filename.substr(0, 1) !== ".") {
+                                let file = fs.statSync(`${folder}/${filename}`),
+                                    mimeType = MimeType.lookup(filename);
 
-                                sMimeType = sMimeType
-                                    ? sMimeType.split("/")[0]
+                                mimeType = mimeType
+                                    ? mimeType.split("/")[0]
                                     : "unknown";
 
                                 return {
-                                    isFolder: oFile.isDirectory(),
-                                    mime: oFile.isDirectory()
+                                    isFolder: file.isDirectory(),
+                                    mime: file.isDirectory()
                                         ? "folder"
-                                        : sMimeType,
-                                    name: sFile,
-                                    size: humanSize(oFile.size),
+                                        : mimeType,
+                                    name: filename,
+                                    size: humanSize(file.size),
                                     time: {
-                                        raw: oFile.mtime,
-                                        human: moment(oFile.mtime).format(
+                                        raw: file.mtime,
+                                        human: moment(file.mtime).format(
                                             "YYYY-MM-DD HH:mm:SS",
                                         ),
                                     },
@@ -126,42 +137,42 @@ if (program.index) {
                             return false;
                         })
                         .sort(),
-                    folder: oRequest.url,
-                    hasParent: oRequest.url !== "/",
-                    port: iPort,
-                    root: sServerRoot.replace(os.homedir(), "~"),
+                    folder: request.url,
+                    hasParent: request.url !== "/",
+                    port: port,
+                    root: serverRoot.replace(os.homedir(), "~"),
                     version: pkg.version,
                 });
             }
-            fNext();
+            next();
         });
 }
 
 if (!program.quiet) {
-    server.use((oRequest, oResponse, fNext) => {
-        let sHour = new Date().toTimeString().split(" ")[0];
+    server.use((request, response, next) => {
+        const hour = new Date().toTimeString().split(" ")[0];
 
         console.log(
-            chalk.cyan(`[${sHour}]`),
-            chalk.magenta(`(${oRequest.method})`),
-            oRequest.url,
+            chalk.cyan(`[${hour}]`),
+            chalk.magenta(`(${request.method})`),
+            request.url,
         );
-        fNext();
+        next();
     });
 }
 
-server.use(express.static(sServerRoot));
-server.listen(iPort);
+server.use(express.static(serverRoot));
+server.listen(port);
 
 if (program.open) {
-    opn(`http://localhost:${iPort}`);
+    open(`http://localhost:${port}`);
 }
 
 console.log(
     chalk.underline(
         `Serving folder ${chalk.bold.cyan(
-            sServerRoot,
-        )} listening on port ${chalk.bold.yellow(iPort)}.`,
+            serverRoot,
+        )} listening on port ${chalk.bold.yellow(port)}.`,
     ),
 );
 console.log(`Quit with (${chalk.cyan("^+C")}).\n`);
