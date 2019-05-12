@@ -46,7 +46,9 @@
     }
   },
   "files": [
-    "lib","autoindexes","views"
+    "lib",
+    "autoindexes",
+    "views"
   ],
   "bin": {
     "seve": "lib/seve.js"
@@ -60,7 +62,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.7.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "husky": "^1.1.2",
+    "husky": "^2.2.0",
     "lint-staged": "^8.0.3",
     "prettier": "^1.14.3"
   },
@@ -72,6 +74,6 @@
     "human-size": "^1.1.0",
     "mimetype": "0.0.8",
     "moment": "^2.13.0",
-    "opn": "^5.4.0"
+    "open": "^6.3.0"
   }
 }
