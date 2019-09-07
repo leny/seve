@@ -29,14 +29,10 @@
       "url": "https://github.com/leny/seve/blob/master/LICENSE-MIT"
     }
   ],
-  "scripts": {
-    "work": "npx babel src --watch --verbose --out-dir lib",
-    "build": "npx babel src --out-dir lib",
-    "lint": "npx eslint --fix --cache src"
-  },
+  "scripts": {},
   "lint-staged": {
     "*.js": [
-      "npx eslint --fix --cache src",
+      "npx eslint --fix --cache",
       "git add"
     ]
   },
@@ -45,36 +41,29 @@
       "pre-commit": "npx lint-staged"
     }
   },
-  "files": [
-    "lib",
-    "autoindexes",
-    "views"
-  ],
+  "files": [],
   "bin": {
-    "seve": "lib/seve.js"
+    "seve": "bin/seve.js"
   },
   "preferGlobal": true,
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^6.0.0",
-    "eslint-plugin-prettier": "^3.0.0",
-    "husky": "^3.0.0",
-    "lint-staged": "^9.0.0",
-    "prettier": "^1.14.3"
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.6.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "@becode/eslint-config": "^0.7.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-unicorn": "^10.0.0",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.2.5",
+    "prettier": "^1.18.2"
   },
-  "dependencies": {
-    "chalk": "^2.4.1",
-    "commander": "^3.0.0",
-    "express": "^4.13.3",
-    "express-handlebars": "^3.0.0",
-    "human-size": "^1.1.0",
-    "micromatch": "^4.0.2",
-    "mimetype": "0.0.8",
-    "moment": "^2.13.0",
-    "open": "^6.3.0"
-  }
+  "dependencies": {}
 }
