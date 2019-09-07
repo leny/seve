@@ -29,7 +29,13 @@
       "url": "https://github.com/leny/seve/blob/master/LICENSE-MIT"
     }
   ],
-  "scripts": {},
+  "scripts": {
+    "build:cli": "npx babel src/seve.js -s --out-dir bin",
+    "work:cli": "npx babel src/seve.js -s --watch --verbose --out-dir bin",
+    "build:client": "npx webpack --progress --profile --colors",
+    "work:client": "npx webpack --env=dev --progress --watch",
+    "build": "npm run build:cli && npm run build:client"
+  },
   "lint-staged": {
     "*.js": [
       "npx eslint --fix --cache",
@@ -57,13 +63,22 @@
     "@babel/preset-react": "^7.0.0",
     "@becode/eslint-config": "^0.7.0",
     "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.2",
     "eslint": "^6.3.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-unicorn": "^10.0.0",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
     "husky": "^3.0.5",
     "lint-staged": "^9.2.5",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
 }
