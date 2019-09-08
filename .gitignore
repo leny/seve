@@ -1,4 +1,5 @@
 node_modules
 *.log
 /.eslintcache
-/lib
+/bin
+/test
