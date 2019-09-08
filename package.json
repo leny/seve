@@ -75,9 +75,14 @@
     "prettier": "^1.18.2",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.3.8"
   },
   "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^3.0.1",
+    "koa": "^2.8.1",
+    "koa-static": "^5.0.0",
+    "open": "^6.4.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   }
