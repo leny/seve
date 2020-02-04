@@ -67,7 +67,7 @@
     "prettier": "^1.14.3"
   },
   "dependencies": {
-    "chalk": "^2.4.1",
+    "chalk": "^3.0.0",
     "commander": "^4.1.1",
     "express": "^4.13.3",
     "express-handlebars": "^3.0.0",
