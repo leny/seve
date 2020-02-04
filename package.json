@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "chalk": "^2.4.1",
-    "commander": "^3.0.0",
+    "commander": "^4.1.1",
     "express": "^4.13.3",
     "express-handlebars": "^3.0.0",
     "human-size": "^1.1.0",
