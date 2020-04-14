@@ -70,7 +70,7 @@
     "chalk": "^3.0.0",
     "commander": "^5.0.0",
     "express": "^4.13.3",
-    "express-handlebars": "^3.0.0",
+    "express-handlebars": "^4.0.3",
     "human-size": "^1.1.0",
     "micromatch": "^4.0.2",
     "mimetype": "0.0.8",
