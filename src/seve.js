@@ -42,7 +42,7 @@ program
         "don't show matching files (only with autoindex)",
     )
     .option("-N, --no-open", "don't browse to the URL at startup")
-    .action(folder => {
+    .action((folder) => {
         if (!fs.existsSync(folder)) {
             return console.log(
                 chalk.bold.red(
@@ -96,11 +96,11 @@ if (program.index) {
                     });
                 }
 
-                return response.render("autoindex.hbs", {
+                return response.render("autoindex", {
                     files: fs
                         .readdirSync(folder)
                         .filter(
-                            filename =>
+                            (filename) =>
                                 !(
                                     program.exclude &&
                                     micromatch.isMatch(
@@ -109,7 +109,7 @@ if (program.index) {
                                     )
                                 ),
                         )
-                        .map(filename => {
+                        .map((filename) => {
                             if (filename.substr(0, 1) !== ".") {
                                 let file = fs.statSync(`${folder}/${filename}`),
                                     mimeType = MimeType.lookup(filename);
