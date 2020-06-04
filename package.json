@@ -1,6 +1,6 @@
 {
   "name": "seve",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Run a tiny & simple server (like, for tests & stuffs) from a given folder (or the current).",
   "keywords": [
     "commandline",
