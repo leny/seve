@@ -61,7 +61,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^7.1.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "husky": "^4.2.1",
+    "husky": "^6.0.0",
     "lint-staged": "^10.0.7",
     "prettier": "^2.0.4"
   },
